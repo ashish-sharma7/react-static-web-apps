@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import './HomePage.css'; // Import your CSS file here
 
-// ... rest of your code ...
-
 const HomePage = () => {
   const [data, setData] = useState([]);
+  const [token, setToken] = useState('');
 
   useEffect(() => {
-    // Fetch data from your API endpoint (replace with your API URL)
-    // For example, you can use the Fetch API or axios to make the request
+    // Replace 'https://rglassapi.azurewebsites.net/api/Activity' with your API endpoint
+    const apiEndpoint = 'https://rglassapi.azurewebsites.net/api/Activity';
 
-    // Replace 'https://localhost:7026/api/Activity' with your actual API endpoint
-    fetch('https://localhost:7026/api/Activity', { method: 'GET' })
+    // Replace 'your-token-here' with your actual JWT token
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJKV1RTZXJ2aWNlQWNjZXNzVG9rZW4iLCJqdGkiOiJkMGU3NjE2Yy1jNDEyLTQzNzAtOTA8Cf0';
+
+    // Set the token in the state
+    setToken(token);
+
+    fetch(apiEndpoint, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Cookie': 'ARRAffinity=22a7daa836b64a8ce56c907737553d08297ff2e76cd06a1f52c29956b9a85c17; ARRAffinitySameSite=22a7daa836b64a8ce56c907737553d08297ff2e76cd06a1f52c29956b9a85c17',
+      },
+    })
       .then((response) => response.json())
       .then((data) => setData(data))
       .catch((error) => console.error('Error fetching data from the API:', error));
@@ -50,4 +61,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default HomePage; 
