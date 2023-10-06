@@ -1,0 +1,66 @@
+/* LoginPage.css */
+
+/* Center the login container vertically */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Make it fill the viewport vertically */
+  }
+  
+  /* Style for the Login heading */
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  /* Style for the login form */
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Style for input fields */
+  .login-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  /* Style for the Login button */
+  .login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  /* Style for the JWT Token container */
+  .token-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Style for the JWT Token label */
+  .token-label {
+    font-weight: bold;
+    display: block;
+  }
+  
+  /* Style for the JWT Token textarea */
+  .token-textarea {
+    width: 300px;
+    height: 200px; /* Adjust the height as needed */
+    resize: none;
+    overflow-y: scroll;
+  }
+  
