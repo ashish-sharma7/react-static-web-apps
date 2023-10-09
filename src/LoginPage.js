@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
-import './LoginPage.css';
+import './LoginPage.css'; // Import the CSS file for LoginPage
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate(); // Use useNavigate instead of history
+
   const handleLogin = async () => {
     try {
+      // Make a POST request to the authentication API to obtain the token
       const response = await fetch('https://rglassapi.azurewebsites.net/api/token', {
         method: 'POST',
         headers: {
@@ -23,13 +27,35 @@ const LoginPage = () => {
         const data = await response.json();
         const token = data.token;
 
+        // Save the token as a cookie
         Cookies.set('jwtToken', token);
 
-        window.location.href = '/activity';
+        // Fetch data from the API using the JWT token and navigate to ActivityPage
+        fetch('https://rglassapi.azurewebsites.net/api/Activity', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              throw new Error('Error fetching data from the API');
+            }
+          })
+          .then(() => {
+            // Navigate to ActivityPage
+            navigate('/activity');
+          })
+          .catch((error) => {
+            // Handle API fetch error
+            console.error('Error fetching data from the API:', error);
+          });
       } else {
-        console.error('Error during login:', response.statusText);
+        // Handle login error, display a message, etc.
       }
     } catch (error) {
+      // Handle network errors
       console.error('Error during login:', error);
     }
   };

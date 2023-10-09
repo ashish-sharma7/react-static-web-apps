@@ -9,7 +9,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
-        <Route path="/activity" element={<ActivityPage />} />
+        <Route path="https://green-water-070b80d10.3.azurestaticapps.net/activity" element={<ActivityPage />} />
       </Routes>
     </Router>
   );

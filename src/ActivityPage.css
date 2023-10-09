@@ -34,7 +34,7 @@
 /* Limit maximum width of application names */
 .activity-table .application-name {
   white-space: pre-wrap;
-  max-width: 150px; /* Adjust this value to your preference */
+  max-width: 200px; /* Adjust this value to your preference */
   overflow: hidden;
   text-overflow: ellipsis;
 }
