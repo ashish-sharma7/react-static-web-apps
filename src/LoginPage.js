@@ -45,7 +45,7 @@ const LoginPage = () => {
           })
           .then(() => {
             // Navigate to ActivityPage
-            navigate('/activity');
+            navigate('/https://green-water-070b80d10.3.azurestaticapps.net/activity');
           })
           .catch((error) => {
             // Handle API fetch error
