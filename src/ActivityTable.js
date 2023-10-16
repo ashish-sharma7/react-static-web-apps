@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import './ActivityPage.css';
+import './ActivityTable.css';
 
-const ActivityPage = () => {
+const ActivityTable = () => {
+  const itemsPerPage = 100;
   const [activityData, setActivityData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchData = async () => {
     try {
@@ -17,7 +19,7 @@ const ActivityPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        setActivityData(data); // Update the state with fetched data
+        setActivityData(data);
       } else {
         console.error('Error fetching data from the API:', response.statusText);
       }
@@ -28,12 +30,31 @@ const ActivityPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [currentPage]);
+
+  const totalPages = Math.ceil(activityData.length / itemsPerPage);
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const displayedData = activityData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="activity-container">
       <h1>Activity Details</h1>
-      <table>
+      <table className="activity-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -46,11 +67,11 @@ const ActivityPage = () => {
           </tr>
         </thead>
         <tbody>
-          {activityData.map((activity, index) => (
+          {displayedData.map((activity, index) => (
             <tr key={index}>
               <td>{activity.id}</td>
               <td>{activity.applicationid}</td>
-              <td>{activity.appname}</td>
+              <td className="application-name">{activity.appname}</td>
               <td>{activity.processname}</td>
               <td>{activity.starttime}</td>
               <td>{activity.endtime}</td>
@@ -59,8 +80,16 @@ const ActivityPage = () => {
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        <button onClick={handlePrevious} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <button onClick={handleNext} disabled={currentPage === totalPages}>
+          Next
+        </button>
+      </div>
     </div>
   );
 };
 
-export default ActivityPage;
+export default ActivityTable;

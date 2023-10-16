@@ -3,7 +3,9 @@ import Cookies from 'js-cookie';
 import './ActivityPage.css';
 
 const ActivityPage = () => {
+  const itemsPerPage = 100;
   const [activityData, setActivityData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchData = async () => {
     try {
@@ -17,7 +19,6 @@ const ActivityPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
         setActivityData(data);
       } else {
         console.error('Error fetching data from the API:', response.statusText);
@@ -29,7 +30,30 @@ const ActivityPage = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [currentPage]);
+
+  const totalPages = Math.ceil(activityData.length / itemsPerPage);
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handleRefresh = () => {
+    fetchData();
+  };
+
+  const displayedData = activityData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="activity-container">
@@ -47,7 +71,7 @@ const ActivityPage = () => {
           </tr>
         </thead>
         <tbody>
-          {activityData.map((activity, index) => (
+          {displayedData.map((activity, index) => (
             <tr key={index}>
               <td>{activity.id}</td>
               <td>{activity.applicationid}</td>
@@ -60,6 +84,17 @@ const ActivityPage = () => {
           ))}
         </tbody>
       </table>
+      <div className="pagination">
+        <button onClick={handlePrevious} disabled={currentPage === 1}>
+          Previous
+        </button>
+        <button onClick={handleNext} disabled={currentPage === totalPages}>
+          Next
+        </button>
+        <button onClick={handleRefresh} className="refresh-button">
+          Refresh
+        </button>
+      </div>
     </div>
   );
 };

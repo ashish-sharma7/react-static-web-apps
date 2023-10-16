@@ -27,14 +27,29 @@
   background-color: #ddd;
 }
 
-
-
-
-
 /* Limit maximum width of application names */
 .activity-table .application-name {
-  white-space: pre-wrap;
-  max-width: 200px; /* Adjust this value to your preference */
+  white-space: nowrap;
+  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+/* Style for pagination */
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  margin: 0 10px;
+  padding: 5px 10px;
+}
+
+/* Style for the Refresh button */
+.refresh-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
 }

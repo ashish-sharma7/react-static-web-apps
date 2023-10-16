@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
-import './LoginPage.css'; // Import the CSS file for LoginPage
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import './LoginPage.css';
+import { useNavigate } from 'react-router-dom';
+import API_CONFIG from './apiConfig'; // Import the API configuration
 
 const LoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const navigate = useNavigate(); // Use useNavigate instead of history
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      // Make a POST request to the authentication API to obtain the token
-      const response = await fetch('https://rglassapi.azurewebsites.net/api/token', {
+      const response = await fetch(API_CONFIG.authentication.token, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -25,37 +25,35 @@ const LoginPage = () => {
 
       if (response.ok) {
         const data = await response.json();
-        const token = data.token;
+        if (data.token) {
+          const token = data.token;
+          Cookies.set('jwtToken', token);
 
-        // Save the token as a cookie
-        Cookies.set('jwtToken', token);
-
-        // Fetch data from the API using the JWT token and navigate to ActivityPage
-        fetch('https://rglassapi.azurewebsites.net/api/Activity', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            } else {
-              throw new Error('Error fetching data from the API');
-            }
+          fetch(API_CONFIG.activity.data, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           })
-          .then(() => {
-            // Navigate to ActivityPage
-            navigate('/https://green-water-070b80d10.3.azurestaticapps.net/activity');
-          })
-          .catch((error) => {
-            // Handle API fetch error
-            console.error('Error fetching data from the API:', error);
-          });
+            .then((response) => {
+              if (response.ok) {
+                return response.json();
+              } else {
+                throw Error('Error fetching data from the API');
+              }
+            })
+            .then(() => {
+              navigate('/activity');
+            })
+            .catch((error) => {
+              console.error('Error fetching data from the API:', error);
+            });
+        } else {
+          console.error('Token not found in the response');
+        }
       } else {
-        // Handle login error, display a message, etc.
+        console.error('Login request failed with status:', response.status);
       }
     } catch (error) {
-      // Handle network errors
       console.error('Error during login:', error);
     }
   };
@@ -67,6 +65,8 @@ const LoginPage = () => {
         <input
           type="text"
           placeholder="Username"
+          id="username" // Add id attribute
+          name="username" // Add name attribute
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="login-input"
@@ -74,6 +74,8 @@ const LoginPage = () => {
         <input
           type="password"
           placeholder="Password"
+          id="password" // Add id attribute
+          name="password" // Add name attribute
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="login-input"
